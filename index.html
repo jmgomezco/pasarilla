@@ -227,6 +227,7 @@
             img.loading = 'lazy';
             img.decoding = 'async';
             img.addEventListener('error', () => {
+                frame.setAttribute('aria-label', image.alt);
                 img.hidden = true;
                 img.removeAttribute('aria-describedby');
                 frame.appendChild(createMissingImageNotice(image.src));
@@ -258,6 +259,10 @@
         }
 
         function getNextImageEntry() {
+            if (imageFeed.length === 0) {
+                return null;
+            }
+
             const isRepeating = nextImageIndex >= imageFeed.length;
             const image = imageFeed[nextImageIndex % imageFeed.length];
             nextImageIndex += 1;
@@ -272,6 +277,11 @@
 
             for (let count = 0; count < batchSize; count += 1) {
                 const nextImageEntry = getNextImageEntry();
+                if (!nextImageEntry) {
+                    feedLoader.textContent = UI_TEXT.emptyFeed;
+                    return;
+                }
+
                 photoList.appendChild(createPhotoCard(nextImageEntry.image));
 
                 if (!hasShownRepeatNotice && nextImageEntry.isRepeating) {
@@ -287,8 +297,11 @@
             entries.forEach((entry) => {
                 if (entry.isIntersecting && !isLoadingMorePhotos) {
                     isLoadingMorePhotos = true;
-                    appendPhotos(PHOTOS_PER_LOAD);
-                    isLoadingMorePhotos = false;
+                    try {
+                        appendPhotos(PHOTOS_PER_LOAD);
+                    } finally {
+                        isLoadingMorePhotos = false;
+                    }
                 }
             });
         }, {
