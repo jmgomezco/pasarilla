@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>Pagina de la asociación de amigos de Pasarilla</title>
+    <title>pasarilla.com</title>
     <!-- Importación de fuentes -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <style>
@@ -80,19 +80,72 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
+        <style>
+/* ...tu CSS actual... */
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container-inicio { padding: 12px 10px; }
+
+    .contenido {
+        max-width: 100%;
+        gap: 10px;
+    }
+
+    .marca {
+        min-width: 0;
+        font-size: clamp(14px, 5.5vw, 20px);
+        padding: 4px 6px;
+        letter-spacing: 0.6px;
+        line-height: 1.1;
+    }
+
+    .botones-derecha { gap: 8px; }
+
+    .btn-cuadrado {
+        width: 44px;
+        height: 44px;
+    }
+
+    /* Compensa cabecera fija en móvil */
+    main {
+        padding-top: 76px !important;
+    }
+
+    /* Fotos más pequeñas y adaptables en móvil */
+    main img {
+        height: auto !important;
+        width: min(92vw, 520px) !important;
+        max-width: 100% !important;
+    }
+}
+
+/* Extra pequeño */
+@media (max-width: 420px) {
+    .container-inicio { padding: 10px 8px; }
+
+    .marca {
+        font-size: clamp(12px, 5.8vw, 17px);
+        padding: 2px 4px;
+    }
+
+    .btn-cuadrado {
+        width: 40px;
+        height: 40px;
+    }
+
+    main {
+        padding-top: 70px !important;
+    }
+
+    main img {
+        width: 94vw !important;
+    }
+}
+</style>
         
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container-inicio { padding: 15px; }
-            .marca { min-width: 80px; font-size: clamp(12px, 7vw, 22px); padding: 6px 10px; }
-        }
-    </style>
+  
 </head>
 <body style="overflow: hidden;">
 
