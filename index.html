@@ -219,7 +219,8 @@
             img.loading = 'lazy';
             img.decoding = 'async';
             img.addEventListener('error', () => {
-                img.replaceWith(createMissingImageNotice(image.src));
+                img.hidden = true;
+                frame.appendChild(createMissingImageNotice(image.src));
             }, { once: true });
 
             const caption = document.createElement('p');
@@ -239,7 +240,7 @@
             const strong = document.createElement('strong');
             strong.textContent = path;
 
-            notice.append(strong, ' para mostrarla en el feed.');
+            notice.append(strong, ' para mostrarla en el feed y recarga la página para verla.');
             return notice;
         }
 
@@ -257,6 +258,10 @@
 
             for (let count = 0; count < batchSize; count += 1) {
                 photoList.appendChild(createPhotoCard(getNextImage()));
+            }
+
+            if (nextImageIndex > imageFeed.length) {
+                feedLoader.textContent = 'El feed sigue cargando reutilizando las imágenes disponibles. Añade más rutas a imageFeed para evitar repeticiones.';
             }
         }
 
