@@ -84,33 +84,42 @@
 /* ...tu CSS actual... */
 
 /* Responsive */
+<style>
 @media (max-width: 768px) {
-    .container-inicio { padding: 12px 10px; }
+    .container-inicio { padding: 18px 14px; }
 
     .contenido {
         max-width: 100%;
-        gap: 10px;
+        gap: 12px;
     }
 
     .marca {
         min-width: 0;
-        font-size: clamp(14px, 5.5vw, 20px);
-        padding: 4px 6px;
-        letter-spacing: 0.6px;
-        line-height: 1.1;
+        font-size: clamp(20px, 7vw, 30px);
+        padding: 8px 10px;
+        letter-spacing: 0.8px;
+        line-height: 1.15;
     }
 
-    .botones-derecha { gap: 8px; }
+    .botones-derecha { gap: 10px; }
 
     .btn-cuadrado {
-        width: 44px;
-        height: 44px;
+        width: 56px;
+        height: 56px;
     }
 
-    /* Compensa cabecera fija en móvil */
+    /* Ajuste por cabecera más alta */
     main {
-        padding-top: 76px !important;
+        padding-top: 98px !important;
     }
+
+    main img {
+        height: auto !important;
+        width: min(92vw, 520px) !important;
+        max-width: 100% !important;
+    }
+}
+</style>
 
     /* Fotos más pequeñas y adaptables en móvil */
     main img {
