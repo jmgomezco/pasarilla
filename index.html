@@ -124,6 +124,12 @@
       display:block;
     }
 
+    /* bar.jpg más grande */
+    .img-bar-grande{
+      max-width:min(98vw, 1200px);
+      max-height:96%;
+    }
+
     /* Botones navegación inferior */
     .nav-btn{
       position:absolute;
@@ -189,6 +195,12 @@
         max-height:100%;
       }
 
+      /* mantener bar.jpg más grande también en móvil */
+      .img-bar-grande{
+        max-width:100%;
+        max-height:98%;
+      }
+
       .nav-btn{
         width:52px;
         height:52px;
@@ -229,7 +241,7 @@
 
       <!-- Contenedor 2 -->
       <section class="slide" data-bg="#e9eef5" style="background:#e9eef5;">
-        <img src="./assets/images/bar.jpg" alt="Pasarilla - Bar" />
+        <img src="./assets/images/bar.jpg" alt="Pasarilla - Bar" class="img-bar-grande" />
       </section>
     </div>
 
