@@ -244,25 +244,19 @@
         }
 
         function getNextImage() {
-            if (imageFeed.length === 0) {
-                return null;
-            }
-
             const image = imageFeed[nextImageIndex % imageFeed.length];
             nextImageIndex += 1;
             return image;
         }
 
         function appendPhotos(batchSize) {
+            if (imageFeed.length === 0) {
+                feedLoader.textContent = 'Añade imágenes al array imageFeed para activar el feed.';
+                return;
+            }
+
             for (let count = 0; count < batchSize; count += 1) {
-                const image = getNextImage();
-
-                if (!image) {
-                    feedLoader.textContent = 'Añade imágenes al array imageFeed para activar el feed.';
-                    return;
-                }
-
-                photoList.appendChild(createPhotoCard(image));
+                photoList.appendChild(createPhotoCard(getNextImage()));
             }
         }
 
@@ -280,7 +274,9 @@
             threshold: 0
         });
 
-        observer.observe(feedLoader);
+        if (imageFeed.length > 0) {
+            observer.observe(feedLoader);
+        }
     </script>
 </body>
 </html>
