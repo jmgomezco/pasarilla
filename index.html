@@ -211,6 +211,7 @@
         const feedLoader = document.getElementById('feedLoader');
         let nextImageIndex = 0;
         let hasShownRepeatNotice = false;
+        let isLoadingMorePhotos = false;
         let renderedPhotoCount = 0;
 
         function createPhotoCard(image) {
@@ -227,6 +228,7 @@
             img.decoding = 'async';
             img.addEventListener('error', () => {
                 img.hidden = true;
+                img.removeAttribute('aria-describedby');
                 frame.appendChild(createMissingImageNotice(image.src));
             }, { once: true });
 
@@ -255,10 +257,11 @@
             return notice;
         }
 
-        function getNextImage() {
+        function getNextImageEntry() {
+            const isRepeating = nextImageIndex >= imageFeed.length;
             const image = imageFeed[nextImageIndex % imageFeed.length];
             nextImageIndex += 1;
-            return image;
+            return { image, isRepeating };
         }
 
         function appendPhotos(batchSize) {
@@ -268,10 +271,10 @@
             }
 
             for (let count = 0; count < batchSize; count += 1) {
-                const isRepeatingImage = nextImageIndex >= imageFeed.length;
-                photoList.appendChild(createPhotoCard(getNextImage()));
+                const nextImageEntry = getNextImageEntry();
+                photoList.appendChild(createPhotoCard(nextImageEntry.image));
 
-                if (!hasShownRepeatNotice && isRepeatingImage) {
+                if (!hasShownRepeatNotice && nextImageEntry.isRepeating) {
                     feedLoader.textContent = UI_TEXT.repeatFeed;
                     hasShownRepeatNotice = true;
                 }
@@ -282,8 +285,10 @@
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
-                if (entry.isIntersecting) {
+                if (entry.isIntersecting && !isLoadingMorePhotos) {
+                    isLoadingMorePhotos = true;
                     appendPhotos(PHOTOS_PER_LOAD);
+                    isLoadingMorePhotos = false;
                 }
             });
         }, {
