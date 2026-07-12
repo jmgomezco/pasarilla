@@ -182,7 +182,7 @@
     <header class="site-header">
         <div class="header-content">
             <h1 class="marca">pasarilla.com</h1>
-            <a href="mailto:jmgomezco@gmail.com" class="about-button" aria-label="Enviar correo a soporte">Sobre</a>
+            <a href="mailto:jmgomezco@gmail.com" class="about-button" aria-label="Sobre - Enviar correo">Sobre</a>
         </div>
     </header>
 
@@ -197,14 +197,15 @@
         const imageFeed = [
             { src: 'assets/images/bar.jpg', alt: 'Fotografía del bar de Pasarilla' }
         ];
-        const INITIAL_BATCH_SIZE = 3;
-        const SCROLL_BATCH_SIZE = 2;
-        const SCROLL_TRIGGER_MARGIN = '250px 0px';
+        const INITIAL_PHOTOS_LOADED = 3;
+        const PHOTOS_PER_SCROLL = 2;
+        const SCROLL_LOAD_THRESHOLD = '250px 0px';
 
         const photoList = document.getElementById('photoList');
         const feed = document.getElementById('feed');
         const feedLoader = document.getElementById('feedLoader');
         let nextImageIndex = 0;
+        let hasShownRepeatNotice = false;
 
         function createPhotoCard(image) {
             const article = document.createElement('article');
@@ -260,22 +261,23 @@
                 photoList.appendChild(createPhotoCard(getNextImage()));
             }
 
-            if (nextImageIndex > imageFeed.length) {
+            if (!hasShownRepeatNotice && nextImageIndex > imageFeed.length) {
                 feedLoader.textContent = 'El feed sigue cargando reutilizando las imágenes disponibles. Añade más rutas a imageFeed para evitar repeticiones.';
+                hasShownRepeatNotice = true;
             }
         }
 
-        appendPhotos(INITIAL_BATCH_SIZE);
+        appendPhotos(INITIAL_PHOTOS_LOADED);
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    appendPhotos(SCROLL_BATCH_SIZE);
+                    appendPhotos(PHOTOS_PER_SCROLL);
                 }
             });
         }, {
             root: feed,
-            rootMargin: SCROLL_TRIGGER_MARGIN,
+            rootMargin: SCROLL_LOAD_THRESHOLD,
             threshold: 0
         });
 
