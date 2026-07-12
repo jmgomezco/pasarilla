@@ -197,6 +197,9 @@
         const imageFeed = [
             { src: 'assets/images/bar.jpg', alt: 'Fotografía del bar de Pasarilla' }
         ];
+        const INITIAL_BATCH_SIZE = 3;
+        const SCROLL_BATCH_SIZE = 2;
+        const SCROLL_TRIGGER_MARGIN = '250px 0px';
 
         const photoList = document.getElementById('photoList');
         const feed = document.getElementById('feed');
@@ -231,33 +234,49 @@
         function createMissingImageNotice(path) {
             const notice = document.createElement('div');
             notice.className = 'missing-image';
-            notice.innerHTML = 'Añade la imagen en <strong>' + path + '</strong> para mostrarla en el feed.';
+            notice.append('Añade la imagen en ');
+
+            const strong = document.createElement('strong');
+            strong.textContent = path;
+
+            notice.append(strong, ' para mostrarla en el feed.');
             return notice;
         }
 
         function getNextImage() {
+            if (imageFeed.length === 0) {
+                return null;
+            }
+
             const image = imageFeed[nextImageIndex % imageFeed.length];
             nextImageIndex += 1;
             return image;
         }
 
         function appendPhotos(batchSize) {
-            for (let index = 0; index < batchSize; index += 1) {
-                photoList.appendChild(createPhotoCard(getNextImage()));
+            for (let count = 0; count < batchSize; count += 1) {
+                const image = getNextImage();
+
+                if (!image) {
+                    feedLoader.textContent = 'Añade imágenes al array imageFeed para activar el feed.';
+                    return;
+                }
+
+                photoList.appendChild(createPhotoCard(image));
             }
         }
 
-        appendPhotos(3);
+        appendPhotos(INITIAL_BATCH_SIZE);
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    appendPhotos(2);
+                    appendPhotos(SCROLL_BATCH_SIZE);
                 }
             });
         }, {
             root: feed,
-            rootMargin: '250px 0px',
+            rootMargin: SCROLL_TRIGGER_MARGIN,
             threshold: 0
         });
 
