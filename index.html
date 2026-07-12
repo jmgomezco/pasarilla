@@ -207,10 +207,11 @@
         const SCROLL_LOAD_MARGIN = '250px 0px';
 
         const photoList = document.getElementById('photoList');
-        const feed = document.getElementById('feed');
+        const feedElement = document.getElementById('feed');
         const feedLoader = document.getElementById('feedLoader');
         let nextImageIndex = 0;
         let hasShownRepeatNotice = false;
+        let renderedPhotoCount = 0;
 
         function createPhotoCard(image) {
             const article = document.createElement('article');
@@ -231,7 +232,10 @@
 
             const caption = document.createElement('p');
             caption.className = 'photo-caption';
+            renderedPhotoCount += 1;
+            caption.id = 'photo-caption-' + renderedPhotoCount;
             caption.textContent = image.alt;
+            img.setAttribute('aria-describedby', caption.id);
 
             frame.appendChild(img);
             article.append(frame, caption);
@@ -264,9 +268,10 @@
             }
 
             for (let count = 0; count < batchSize; count += 1) {
+                const isRepeatingImage = nextImageIndex >= imageFeed.length;
                 photoList.appendChild(createPhotoCard(getNextImage()));
 
-                if (!hasShownRepeatNotice && nextImageIndex > imageFeed.length) {
+                if (!hasShownRepeatNotice && isRepeatingImage) {
                     feedLoader.textContent = UI_TEXT.repeatFeed;
                     hasShownRepeatNotice = true;
                 }
@@ -282,7 +287,7 @@
                 }
             });
         }, {
-            root: feed,
+            root: feedElement,
             rootMargin: SCROLL_LOAD_MARGIN,
             threshold: 0
         });
