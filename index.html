@@ -28,7 +28,6 @@
         }
 
         body {
-            overflow: hidden;
             color: var(--text-on-light);
         }
 
@@ -197,9 +196,15 @@
         const imageFeed = [
             { src: 'assets/images/bar.jpg', alt: 'Fotografía del bar de Pasarilla' }
         ];
-        const INITIAL_PHOTOS_LOADED = 3;
-        const PHOTOS_PER_SCROLL = 2;
-        const SCROLL_LOAD_THRESHOLD = '250px 0px';
+        const UI_TEXT = {
+            emptyFeed: 'Añade imágenes al array imageFeed para activar el feed.',
+            repeatFeed: 'El feed sigue cargando reutilizando las imágenes disponibles. Añade más rutas a imageFeed para evitar repeticiones.',
+            missingImagePrefix: 'Añade la imagen en ',
+            missingImageSuffix: ' para mostrarla en el feed y recarga la página para verla.'
+        };
+        const INITIAL_PHOTO_COUNT = 3;
+        const PHOTOS_PER_LOAD = 2;
+        const SCROLL_LOAD_MARGIN = '250px 0px';
 
         const photoList = document.getElementById('photoList');
         const feed = document.getElementById('feed');
@@ -236,12 +241,12 @@
         function createMissingImageNotice(path) {
             const notice = document.createElement('div');
             notice.className = 'missing-image';
-            notice.append('Añade la imagen en ');
+            notice.append(UI_TEXT.missingImagePrefix);
 
             const strong = document.createElement('strong');
             strong.textContent = path;
 
-            notice.append(strong, ' para mostrarla en el feed y recarga la página para verla.');
+            notice.append(strong, UI_TEXT.missingImageSuffix);
             return notice;
         }
 
@@ -253,31 +258,31 @@
 
         function appendPhotos(batchSize) {
             if (imageFeed.length === 0) {
-                feedLoader.textContent = 'Añade imágenes al array imageFeed para activar el feed.';
+                feedLoader.textContent = UI_TEXT.emptyFeed;
                 return;
             }
 
             for (let count = 0; count < batchSize; count += 1) {
                 photoList.appendChild(createPhotoCard(getNextImage()));
-            }
 
-            if (!hasShownRepeatNotice && nextImageIndex > imageFeed.length) {
-                feedLoader.textContent = 'El feed sigue cargando reutilizando las imágenes disponibles. Añade más rutas a imageFeed para evitar repeticiones.';
-                hasShownRepeatNotice = true;
+                if (!hasShownRepeatNotice && nextImageIndex === imageFeed.length + 1) {
+                    feedLoader.textContent = UI_TEXT.repeatFeed;
+                    hasShownRepeatNotice = true;
+                }
             }
         }
 
-        appendPhotos(INITIAL_PHOTOS_LOADED);
+        appendPhotos(INITIAL_PHOTO_COUNT);
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    appendPhotos(PHOTOS_PER_SCROLL);
+                    appendPhotos(PHOTOS_PER_LOAD);
                 }
             });
         }, {
             root: feed,
-            rootMargin: SCROLL_LOAD_THRESHOLD,
+            rootMargin: SCROLL_LOAD_MARGIN,
             threshold: 0
         });
 
