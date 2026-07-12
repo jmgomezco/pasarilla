@@ -241,12 +241,13 @@
         function createMissingImageNotice(path) {
             const notice = document.createElement('div');
             notice.className = 'missing-image';
-            notice.append(UI_TEXT.missingImagePrefix);
+            notice.appendChild(document.createTextNode(UI_TEXT.missingImagePrefix));
 
             const strong = document.createElement('strong');
             strong.textContent = path;
 
-            notice.append(strong, UI_TEXT.missingImageSuffix);
+            notice.appendChild(strong);
+            notice.appendChild(document.createTextNode(UI_TEXT.missingImageSuffix));
             return notice;
         }
 
@@ -265,7 +266,7 @@
             for (let count = 0; count < batchSize; count += 1) {
                 photoList.appendChild(createPhotoCard(getNextImage()));
 
-                if (!hasShownRepeatNotice && nextImageIndex === imageFeed.length + 1) {
+                if (!hasShownRepeatNotice && nextImageIndex > imageFeed.length) {
                     feedLoader.textContent = UI_TEXT.repeatFeed;
                     hasShownRepeatNotice = true;
                 }
