@@ -289,12 +289,7 @@
   </main>
 
   <script>
-    (function () {
-      fetch('https://f5pv8hbbnf.execute-api.us-east-1.amazonaws.com/pepe', {
-        method: 'POST'
-      }).catch((error) => {
-        console.error('Error llamando a /pepe:', error);
-      });
+    
 
       const slides = Array.from(document.querySelectorAll('.slide'));
       const prev = document.getElementById('btnPrev');
